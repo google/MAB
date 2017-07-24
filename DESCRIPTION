@@ -1,0 +1,12 @@
+Package: MAB
+Title: Multi-Armed Bandit Strategies Implementation and Simulation
+Version: 0.0.0.9000
+Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Description: Implement various multi-armed bandit strategies and
+    conduct comparison studies via simulation.
+Depends:
+    R (>= 3.2.2), ggplot2, emre, assertthat
+License: Apache License 2.0
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
