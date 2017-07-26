@@ -1,3 +1,16 @@
+# Copyright 2012-2017 Google
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 #' Compare various strategies for Multi-Armed Bandit in stationary and non-stationary scenarios
 #'
 #' This function is aimed to simulate data in different scenarios to compare various strategies in Multi-Armed Bandit. 
@@ -83,7 +96,7 @@
 SimulateMultipleMethods <- function(method = "Thompson-Sampling", method.par = list(ndraws.TS = 1000), iter, nburnin, nperiod, reward.mean.family, reward.family, narms.family, npulls.family, 
                            stationary = TRUE, nonstationary.type = NULL, data.par, regret.plot = FALSE){
   if (! all(method %in% c("Epsilon-Greedy", "Epsilon-Decreasing", "Thompson-Sampling","EXP3", "UCB", "Bayes-Poisson-TS", 
-                      "Greedy-Thompson-Sampling", "EXP3-Thompson-Sampling",  "Greedy-Bayes-Poisson-TS", "EXP3-Bayes-Poisson-TS"))){
+                      "Greedy-Thompson-Sampling", "EXP3-Thompson-Sampling",  "Greedy-Bayes-Poisson-TS", "EXP3-Bayes-Poisson-TS", "HyperTS"))){
     stop("Please specify correct method names!")
   }
   if (! reward.family %in% c("Bernoulli", "Poisson", "Gaussian")){
