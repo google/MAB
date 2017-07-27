@@ -1,7 +1,11 @@
 Package: MAB
 Title: Multi-Armed Bandit Strategies Implementation and Simulation
-Version: 0.0.0.9000
-Authors@R: person("First", "Last", email = "first.last@example.com", role = c("aut", "cre"))
+Version: 1.0.0
+Authors@R: c(
+    person("Yunbo", "Ouyang", email = "youyang@google.com", role = c("aut")),
+    person("Shuchao", "Bi", email = "shuchaobi@google.com", role = c("aut", "cre")),
+    person("Zoey", "Chu", email = "chuwanghuan@google.com", role = c("aut")),
+    person("Chunqiu", "Zeng", email = "chunqiuzeng@google.com", role = c("aut")))
 Description: Implement various multi-armed bandit strategies and
     conduct comparison studies via simulation.
 Depends:
