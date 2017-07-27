@@ -11,7 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 #' Calculate the probability of pulling each arm in the next period for various strategies
 #'
 #' This function is aimed to compute the probability of pulling each arm for various methods in Multi-Armed Bandit given the total reward and the number of trials for each arm.
@@ -53,26 +52,38 @@
 #' @examples
 #' ### Calculate weights using Thompson Sampling if reward follows Poisson distribution
 #' set.seed(100)
-#' CalculateWeight(method = "Thompson-Sampling", method.par = list(ndraws.TS = 1000), 
-#'    all.event = data.frame(reward = 1:3, trial = rep(10, 3)), reward.family = "Poisson")
+#' CalculateWeight(method = "Thompson-Sampling",
+#'                 method.par = list(ndraws.TS = 1000),
+#'                 all.event = data.frame(reward = 1:3, trial = rep(10, 3)),
+#'                 reward.family = "Poisson")
 #' ### Calculate weights using EXP3
-#' CalculateWeight(method = "EXP3", method.par = list(EXP3 = list(gamma = 0.01, eta =0.1)), 
-#'    all.event = data.frame(reward = 1:3, trial = rep(10, 3)), reward.family = "Bernoulli", 
-#'    EXP3Info = list(prevWeight = rep(1, 3), EXP3Trial = rep(5, 3), EXP3Reward = 0:2))
+#' CalculateWeight(method = "EXP3",
+#'                 method.par = list(EXP3 = list(gamma = 0.01, eta =0.1)),
+#'                 all.event = data.frame(reward = 1:3, trial = rep(10, 3)),
+#'                 reward.family = "Bernoulli",
+#'                 EXP3Info = list(prevWeight = rep(1, 3), EXP3Trial = rep(5, 3), EXP3Reward = 0:2))
 
 
 
-CalculateWeight <- function(method = "Thompson-Sampling", method.par = list(ndraws.TS = 1000), all.event, reward.family, sd.reward = NULL, period = 1, EXP3Info = NULL){
-  method.name <- c("Epsilon-Greedy", "Epsilon-Decreasing", "Thompson-Sampling","EXP3", "UCB", "Bayes-Poisson-TS",
-                      "Greedy-Thompson-Sampling", "EXP3-Thompson-Sampling",  "Greedy-Bayes-Poisson-TS", "EXP3-Bayes-Poisson-TS")
+CalculateWeight <- function(method = "Thompson-Sampling",
+                            method.par = list(ndraws.TS = 1000),
+                            all.event,
+                            reward.family,
+                            sd.reward = NULL,
+                            period = 1,
+                            EXP3Info = NULL){
+  method.name <- c("Epsilon-Greedy", "Epsilon-Decreasing", "Thompson-Sampling",
+                   "EXP3", "UCB", "Bayes-Poisson-TS",
+                   "Greedy-Thompson-Sampling", "EXP3-Thompson-Sampling",
+                   "Greedy-Bayes-Poisson-TS", "EXP3-Bayes-Poisson-TS")
   if (! method %in% method.name){
     stop("Please specify correct method names!")
   }
   if (! reward.family %in% c("Bernoulli", "Poisson", "Gaussian")){
     stop("Please specify correct reward family!")
   }
-
-
+  
+  
   if (method == method.name[1]){
     if (! is.number(method.par$epsilon) ){
       stop("Please specify correct parameters for Epsilon-Greedy!")
@@ -86,8 +97,8 @@ CalculateWeight <- function(method = "Thompson-Sampling", method.par = list(ndra
     weight[maxIdx] <- (1 - eps) / maxCount
     return(weight)
   }
-
-
+  
+  
   if (method == method.name[2]){
     if ( ! is.number(method.par$epsilon)){
       stop("Please specify correct parameters for Epsilon-Decreasing!")
@@ -101,9 +112,11 @@ CalculateWeight <- function(method = "Thompson-Sampling", method.par = list(ndra
     weight[maxIdx] <- (1 - eps) / maxCount
     return(weight)
   }
-
-
-  if (method == method.name[3] | method == method.name[7] | method == method.name[8]){
+  
+  
+  if (method == method.name[3] |
+      method == method.name[7] |
+      method == method.name[8]){
     if (! is.number(method.par$ndraws.TS)){
       stop("Please specify correct parameters for Thompson-Sampling!")
     }
@@ -114,22 +127,25 @@ CalculateWeight <- function(method = "Thompson-Sampling", method.par = list(ndra
     ans <- matrix(nrow = ndraws.TS, ncol = n)
     if (reward.family == "Bernoulli"){
       failure <- trial - reward
-      for (i in 1:n) ans[ ,i] <- rbeta(ndraws.TS, reward[i] + 1, failure[i] + 1)
+      for (i in 1:n) ans[ ,i] <- rbeta(ndraws.TS, shape1 = reward[i] + 1,
+                                       shape2 = failure[i] + 1)
     }
     if (reward.family == "Gaussian"){
-      for (i in 1:n) ans[ ,i] <- rnorm(ndraws.TS, reward[i] / trial[i], sd.reward[i] / sqrt(trial[i]))
+      for (i in 1:n) ans[ ,i] <- rnorm(ndraws.TS, mean = reward[i] / trial[i],
+                                       sd = sd.reward[i] / sqrt(trial[i]))
     }
     if (reward.family == "Poisson"){
-      for (i in 1:n) ans[ ,i] <- rgamma(ndraws.TS, shape = reward[i] + 1, scale = 1 / trial[i])
+      for (i in 1:n) ans[ ,i] <- rgamma(ndraws.TS, shape = reward[i] + 1,
+                                        scale = 1 / trial[i])
     }
-
+    
     w <- table(factor(max.col(ans), levels = 1:n))
-
-
+    
+    
     if (method == method.name[3]){
       return(as.vector(w / sum(w)))
     }
-
+    
     if (method == method.name[7]){
       if (! is.number(method.par$epsilon)){
         stop("Please specify correct parameters for Greedy-Thompson-Sampling!")
@@ -142,25 +158,26 @@ CalculateWeight <- function(method = "Thompson-Sampling", method.par = list(ndra
       eps <- method.par$epsilon
       return(as.vector(eps * w / sum(w) + (1 - eps) * maxVector))
     }
-
+    
     if (method == method.name[8]){
-      if ( ! is.number(method.par$EXP3$gamma) | ! is.number(method.par$EXP3$eta) ){
+      if ( ! is.number(method.par$EXP3$gamma) |
+           ! is.number(method.par$EXP3$eta) ){
         stop("Please specify correct parameters for EXP3-Thompson-Sampling!")
       }
       if (reward.family != "Bernoulli"){
         stop("Please use Bernoulli Reward Family to run EXP3")
       }
-
+      
       eta <- method.par$EXP3$eta
       gamma <- method.par$EXP3$gamma
       prevWeight <- EXP3Info$prevWeight
       temp <- prevWeight * exp(eta * w / sum(w))
-
+      
       return(as.vector((1 - gamma) * temp / sum(temp) + gamma / n))
     }
   }
-
-
+  
+  
   if (method == method.name[4]){
     if (! is.number(method.par$EXP3$gamma) | ! is.number(method.par$EXP3$eta)){
       stop("Please specify correct parameters for EXP3!")
@@ -173,14 +190,15 @@ CalculateWeight <- function(method = "Thompson-Sampling", method.par = list(ndra
     EXP3Reward <- EXP3Info$EXP3Reward
     eta <- method.par$EXP3$eta
     gamma <- method.par$EXP3$gamma
-
+    
     EXP3Rate <- ifelse(EXP3Trial == 0, 0, EXP3Reward / EXP3Trial)
-    temp <- prevWeight * exp(eta * (EXP3Rate - max(EXP3Rate)) * sum(EXP3Trial) / length(EXP3Trial))
-
+    temp <- prevWeight *
+      exp(eta * (EXP3Rate - max(EXP3Rate)) * sum(EXP3Trial) / length(EXP3Trial))
+    
     return(as.vector((1 - gamma) * temp / sum(temp) + gamma / length(EXP3Trial)))
   }
-
-
+  
+  
   if (method == method.name[5]){
     reward <- all.event$reward
     trial <- all.event$trial
@@ -192,9 +210,13 @@ CalculateWeight <- function(method = "Thompson-Sampling", method.par = list(ndra
     maxVector[maxIdx] <- 1 / maxCount
     return(maxVector)
   }
-
-  if (method == method.name[6] | method == method.name[9] | method == method.name[10]){
-    if ( ! is.number(method.par$BP$iter.BP) | ! is.number(method.par$BP$ndraws.BP)  | ! is.number(method.par$BP$interval.BP) ){
+  
+  if (method == method.name[6] |
+      method == method.name[9] |
+      method == method.name[10]){
+    if ( ! is.number(method.par$BP$iter.BP) |
+         ! is.number(method.par$BP$ndraws.BP) |
+         ! is.number(method.par$BP$interval.BP)){
       stop("Please specify correct parameters for Bayes-Poisson-TS!")
     }
     if (reward.family == "Gaussian"){
@@ -203,11 +225,11 @@ CalculateWeight <- function(method = "Thompson-Sampling", method.par = list(ndra
     iter.BP <- method.par$BP$iter.BP
     ndraws.BP <- method.par$BP$ndraws.BP
     interval.BP <- method.par$BP$interval.BP
-
+    
     n <- length(all.event$trial)
     temp <- all.event
     temp$Id <- sapply(1:n, function(x) paste("Arm", x))
-
+    
     mdl <- SetupEMREoptim(
       "reward ~ 1 + (1|Id) + offset(trial)",
       data = temp, model.constructor = PoissonEMRE,
@@ -225,11 +247,11 @@ CalculateWeight <- function(method = "Thompson-Sampling", method.par = list(ndra
       return(which(predK == max(predK))[1])
     })
     w <- table(factor(winnerPred, levels = 1:n))
-
+    
     if (method == method.name[6]){
       return(as.vector(w / sum(w)))
     }
-
+    
     if (method == method.name[9]){
       if ( ! is.number(method.par$epsilon)){
         stop("Please specify correct parameters for Greedy-Bayes-Poisson-TS!")
@@ -242,20 +264,21 @@ CalculateWeight <- function(method = "Thompson-Sampling", method.par = list(ndra
       eps <- method.par$epsilon
       return(as.vector(eps * w / sum(w) + (1 - eps) * maxVector))
     }
-
+    
     if (method == method.name[10]){
-      if ( ! is.number(method.par$EXP3$gamma) | ! is.number(method.par$EXP3$eta) ){
+      if ( ! is.number(method.par$EXP3$gamma) |
+           ! is.number(method.par$EXP3$eta) ){
         stop("Please specify correct parameters for EXP3-Bayes-Poisson-TS!")
       }
       if (reward.family != "Bernoulli"){
         stop("Please use Bernoulli Reward Family to run Bayes-Poisson-TS!")
       }
-
+      
       eta <- method.par$EXP3$eta
       gamma <- method.par$EXP3$gamma
       prevWeight <- EXP3Info$prevWeight
       temp <- prevWeight * exp(eta * w / sum(w))
-
+      
       return(as.vector((1 - gamma) * temp / sum(temp) + gamma / n))
     }
   }

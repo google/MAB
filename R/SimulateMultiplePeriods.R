@@ -3,9 +3,9 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-  #     http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-  # Unless required by applicable law or agreed to in writing, software
+# Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
@@ -87,40 +87,76 @@
 #' @examples
 #' ### Simulate Thompson-Sampling
 #' set.seed(100)
-#' res <- SimulateMultiplePeriods(method = "Thompson-Sampling", method.par = list(ndraws.TS = 1000), nburnin = 30, nperiod = 180, npulls.per.period = 5, reward.family = "Bernoulli",  mean.reward = runif(3, 0, 0.1), weight.plot = TRUE)
+#' res <- SimulateMultiplePeriods(method = "Thompson-Sampling",
+#'                                method.par = list(ndraws.TS = 1000),
+#'                                nburnin = 30,
+#'                                nperiod = 180,
+#'                                npulls.per.period = 5,
+#'                                reward.family = "Bernoulli",
+#'                                mean.reward = runif(3, 0, 0.1),
+#'                                weight.plot = TRUE)
 #' res$weight.plot.object
 #' ### Simulate EXP3-Thompson-Sampling
 #' set.seed(100)
-#' res <- SimulateMultiplePeriods(method = "EXP3-Thompson-Sampling", method.par = list(ndraws.TS = 1000, EXP3 = list(gamma = 0, eta = 0.1)), nburnin = 30, nperiod = 180, npulls.per.period = 5, 
-#'               reward.family = "Bernoulli",  mean.reward = runif(3, 0, 0.1), weight.plot = TRUE)
+#' res <- SimulateMultiplePeriods(method = "EXP3-Thompson-Sampling",
+#'                                method.par = list(ndraws.TS = 1000,
+#'                                                  EXP3 = list(gamma = 0, eta = 0.1)),
+#'                                nburnin = 30,
+#'                                nperiod = 180,
+#'                                npulls.per.period = 5,
+#'                                reward.family = "Bernoulli",
+#'                                mean.reward = runif(3, 0, 0.1),
+#'                                weight.plot = TRUE)
 #' res$weight.plot.object
 #' ### Simulate ensemble method HyperTS given "Thompson-Sampling", "Epsilon-Greedy" and "Epsilon-Decreasing"
 #' set.seed(100)
-#' res <- SimulateMultiplePeriods(method = "HyperTS", method.par = list(ndraws.TS = 1000, epsilon = 0.1, HyperTS = list(method.list = c("Thompson-Sampling", "Epsilon-Greedy", "Epsilon-Decreasing"))),
-#'                                nburnin = 30, nperiod = 180, npulls.per.period = 5, reward.family = "Poisson",  mean.reward = runif(3, 0, 0.1), weight.plot = TRUE)
+#' res <- SimulateMultiplePeriods(method = "HyperTS",
+#'                                method.par = list(ndraws.TS = 1000,
+#'                                                  epsilon = 0.1,
+#'                                                  HyperTS = list(method.list = c("Thompson-Sampling",
+#'                                                                                 "Epsilon-Greedy",
+#'                                                                                 "Epsilon-Decreasing"))),
+#'                                nburnin = 30,
+#'                                nperiod = 180,
+#'                                npulls.per.period = 5,
+#'                                reward.family = "Poisson",
+#'                                mean.reward = runif(3, 0, 0.1),
+#'                                weight.plot = TRUE)
 #' res$weight.plot.object
 
 
 
 
-SimulateMultiplePeriods <- function(method = "Thompson-Sampling", method.par = list(ndraws.TS = 1000), nburnin, nperiod, reward.family,  mean.reward, sd.reward = NULL, npulls.per.period = 1,
-                           weight.plot = FALSE, regret.plot = FALSE){
-  if (! method %in% c("Epsilon-Greedy", "Epsilon-Decreasing", "Thompson-Sampling","EXP3", "UCB", "Bayes-Poisson-TS", 
-                      "Greedy-Thompson-Sampling", "EXP3-Thompson-Sampling",  "Greedy-Bayes-Poisson-TS", "EXP3-Bayes-Poisson-TS", "HyperTS")){
+SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
+                                    method.par = list(ndraws.TS = 1000),
+                                    nburnin,
+                                    nperiod,
+                                    reward.family,
+                                    mean.reward,
+                                    sd.reward = NULL,
+                                    npulls.per.period = 1,
+                                    weight.plot = FALSE,
+                                    regret.plot = FALSE){
+  if (! method %in% c("Epsilon-Greedy", "Epsilon-Decreasing",
+                      "Thompson-Sampling","EXP3", "UCB", "Bayes-Poisson-TS",
+                      "Greedy-Thompson-Sampling", "EXP3-Thompson-Sampling",
+                      "Greedy-Bayes-Poisson-TS", "EXP3-Bayes-Poisson-TS",
+                      "HyperTS")){
     stop("Please specify correct method names!")
   }
-
+  
   if (is.vector(mean.reward)){
     rewardVec <- mean.reward
   }
-
-
+  
+  
   if (length(npulls.per.period) == 1){
     npullsVec <- npulls.per.period
-  }else if(length(npulls.per.period) != nburnin + nperiod | min(npulls.per.period) <= 0){
+  }else if(length(npulls.per.period) != nburnin + nperiod |
+           min(npulls.per.period) <= 0){
     stop("Please specify correct number of pulls per period!")
   }
-
+  
   if (is.vector(mean.reward)){
     bestReward <- max(rewardVec)
     n <- length(rewardVec)
@@ -128,41 +164,45 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling", method.par = l
     bestReward <- apply(mean.reward, 1, max)
     n <- dim(mean.reward)[2]
   }
-
-
-  if (reward.family == "Gaussian" & (length(sd.reward) != n | anyNA(sd.reward))){
+  
+  
+  if (reward.family == "Gaussian" &
+      (length(sd.reward) != n | anyNA(sd.reward))){
     stop("Please specify correct standard deviation for Gaussian reward family!")
   }
-
+  
   if (is.vector(mean.reward)){
     if (length(npulls.per.period) == 1){
       burninTrial <- rmultinom(1, nburnin * npullsVec, rep(1 / n, n))
     }else{
       burninTrial <- rmultinom(1, sum(npulls.per.period[1:nburnin]), rep(1 / n, n))
     }
-    burninReward <- apply(cbind(burninTrial, rewardVec, sd.reward), 1, GetReward, reward.family)
+    burninReward <- apply(cbind(burninTrial, rewardVec, sd.reward), 1,
+                          GetReward, reward.family)
   }else{
     burninTrial <- rep(0, n)
     burninReward <- rep(0, n)
     if (length(npulls.per.period) == 1){
       for (period in 1:nburnin){
         tempTrial <- rmultinom(1, npullsVec, rep(1 / n, n))
-        tempReward <- apply(cbind(tempTrial, mean.reward[period, ], sd.reward), 1,  GetReward, reward.family)
+        tempReward <- apply(cbind(tempTrial, mean.reward[period, ], sd.reward),
+                            1,  GetReward, reward.family)
         burninTrial <- burninTrial + tempTrial
         burninReward <- burninReward + tempReward
       }
     }else{
       for (period in 1:nburnin){
         tempTrial <- rmultinom(1, npulls.per.period[period], rep(1 / n, n))
-        tempReward <- apply(cbind(tempTrial, mean.reward[period, ], sd.reward), 1, GetReward, reward.family)
+        tempReward <- apply(cbind(tempTrial, mean.reward[period, ], sd.reward),
+                            1, GetReward, reward.family)
         burninTrial <- burninTrial + tempTrial
         burninReward <- burninReward + tempReward
       }
     }
   }
   burninEvent <- data.frame(trial = burninTrial, reward = burninReward)
-
-
+  
+  
   equalDailyRegret <- rep(0, nperiod)
   for (period in 1:nperiod){
     if (length(npulls.per.period) == 1){
@@ -173,18 +213,25 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling", method.par = l
     if (is.vector(mean.reward)){
       equalDailyRegret[period] <- sum(dailyTrial * (bestReward - rewardVec))
     }else{
-      equalDailyRegret[period] <- sum(dailyTrial * (bestReward[nburnin + period] - mean.reward[nburnin + period, ]))
+      equalDailyRegret[period] <-
+        sum(dailyTrial * (bestReward[nburnin + period] - mean.reward[nburnin + period, ]))
     }
   }
-
-
+  
+  
   allWeight <- cbind()
   all.event <- burninEvent
   dailyRegret <- rep(0, nperiod)
-
-  weight <- as.vector(CalculateWeight(method = "Thompson-Sampling", sd.reward = sd.reward, reward.family = reward.family, all.event = all.event, method.par = list(ndraws.TS = 1000)))
-  EXP3Info <- list(prevWeight = weight, EXP3Trial = burninTrial, EXP3Reward = burninReward)
-
+  
+  weight <- as.vector(CalculateWeight(method = "Thompson-Sampling",
+                                      sd.reward = sd.reward,
+                                      reward.family = reward.family,
+                                      all.event = all.event,
+                                      method.par = list(ndraws.TS = 1000)))
+  EXP3Info <- list(prevWeight = weight,
+                   EXP3Trial = burninTrial,
+                   EXP3Reward = burninReward)
+  
   if (method == "HyperTS"){
     nmethod <- length(method.par$HyperTS$method.list)
     total.reward <- rep(0, nmethod)
@@ -195,10 +242,10 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling", method.par = l
       total.trial <- rep(1, nmethod)
     }
   }
-
-
-
-
+  
+  
+  
+  
   for (period in 1:nperiod){
     if (method == "HyperTS"){
       ndraws <- 1000
@@ -208,20 +255,37 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling", method.par = l
                                                total.trial[i] - total.reward[i] + 1)
       }
       if (reward.family == "Gaussian"){
-        for (i in 1:nmethod) ans[ ,i] <- rnorm(ndraws, total.reward[i] / total.trial[i], sd.reward[i] / sqrt(total.trial[i]))
+        for (i in 1:nmethod) ans[ ,i] <- rnorm(ndraws,
+                                               mean = total.reward[i] / total.trial[i],
+                                               sd = sd.reward[i] / sqrt(total.trial[i]))
       }
       if (reward.family == "Poisson"){
-        for (i in 1:nmethod) ans[ ,i] <- rgamma(ndraws, shape = total.reward[i] + 1, scale = 1 / total.trial[i])
+        for (i in 1:nmethod) ans[ ,i] <-
+            rgamma(ndraws, shape = total.reward[i] + 1,
+                   scale = 1 / total.trial[i])
       }
-      method.index <- which.max(as.vector(table(factor(max.col(ans), levels = 1:nmethod))))
+      method.index <- which.max(as.vector(table(factor(max.col(ans),
+                                                       levels = 1:nmethod))))
       method.chosen <- method.par$HyperTS$method.list[method.index]
-      weight <- CalculateWeight(method.chosen, all.event = all.event, sd.reward = sd.reward, reward.family = reward.family, method.par = method.par, period = period, EXP3Info = EXP3Info)
+      weight <- CalculateWeight(method.chosen,
+                                all.event = all.event,
+                                sd.reward = sd.reward,
+                                reward.family = reward.family,
+                                method.par = method.par,
+                                period = period,
+                                EXP3Info = EXP3Info)
     }
-
+    
     if (method != "HyperTS"){
-      weight <- CalculateWeight(method, all.event = all.event, sd.reward = sd.reward, reward.family = reward.family, method.par = method.par, period = period, EXP3Info = EXP3Info)
+      weight <- CalculateWeight(method,
+                                all.event = all.event,
+                                sd.reward = sd.reward,
+                                reward.family = reward.family,
+                                method.par = method.par,
+                                period = period,
+                                EXP3Info = EXP3Info)
     }
-
+    
     allWeight <- cbind(allWeight, weight)
     if (length(npulls.per.period) == 1){
       dailyTrial <- rmultinom(1, npullsVec, weight)
@@ -229,57 +293,83 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling", method.par = l
       dailyTrial <- rmultinom(1, npulls.per.period[nburnin + period], weight)
     }
     if (is.vector(mean.reward)){
-      dailyReward <- apply(cbind(dailyTrial, rewardVec, sd.reward), 1, GetReward, reward.family)
+      dailyReward <- apply(cbind(dailyTrial, rewardVec, sd.reward),
+                           1, GetReward, reward.family)
     }else{
-      dailyReward <- apply(cbind(dailyTrial, mean.reward[nburnin + period, ], sd.reward), 1, GetReward, reward.family)
+      dailyReward <-
+        apply(cbind(dailyTrial, mean.reward[nburnin + period, ], sd.reward),
+              1, GetReward, reward.family)
     }
-
+    
     all.event$trial <- all.event$trial + dailyTrial
     all.event$reward <- all.event$reward + dailyReward
     if (is.vector(mean.reward)){
       dailyRegret[period] <- sum(dailyTrial * (bestReward - rewardVec))
     }else{
-      dailyRegret[period] <- sum(dailyTrial * (bestReward[nburnin + period] - mean.reward[nburnin + period, ]))
+      dailyRegret[period] <-
+        sum(dailyTrial *
+              (bestReward[nburnin + period] - mean.reward[nburnin + period, ]))
     }
-    EXP3Info = list(prevWeight = weight, EXP3Trial = dailyTrial, EXP3Reward = dailyReward)
-
+    EXP3Info = list(prevWeight = weight,
+                    EXP3Trial = dailyTrial,
+                    EXP3Reward = dailyReward)
+    
     if (method == "HyperTS"){
       total.reward[method.index] <- total.reward[method.index] + sum(dailyReward)
       total.trial[method.index] <- total.trial[method.index] + sum(dailyTrial)
     }
   }
   relativeRegret <- dailyRegret / equalDailyRegret
-
+  
   if (weight.plot == TRUE){
     weightVector <- c(t(allWeight))
     if (is.vector(mean.reward)){
-      names <- rep(sapply(rewardVec, function(x) paste("Mean Reward =", x)), each = nperiod)
+      names <- rep(sapply(rewardVec, function(x) paste("Mean Reward =", x)),
+                   each = nperiod)
     }else{
       names <- rep(sapply(1:n, function(x) paste("Arm", x)), each = nperiod)
     }
-
+    
     periodSeq <- rep(1:nperiod, n)
     graphData <- data.frame(names, periodSeq, weightVector)
-    weight.plot.object <- ggplot(graphData, aes(x = periodSeq, y = weightVector, colour = names)) + geom_line() + ggtitle("Weight Plot") +
-      theme(legend.text = element_text(size = 12, face = "bold"), axis.text.y = element_text(size = 12), legend.title = element_blank()) + 
+    weight.plot.object <- ggplot(graphData,
+                                 aes(x = periodSeq,
+                                     y = weightVector,
+                                     colour = names)) +
+      geom_line() + ggtitle("Weight Plot") +
+      theme(legend.text = element_text(size = 12, face = "bold"),
+            axis.text.y = element_text(size = 12),
+            legend.title = element_blank()) +
       labs(y = "weight", x = "period")
   }
   if (regret.plot == TRUE){
     periodSeq <- 1:nperiod
     graphData <- data.frame(periodSeq, relativeRegret)
-    regret.plot.object <- ggplot(graphData, aes(x = periodSeq, y = relativeRegret)) + geom_line() + ggtitle("Regret Plot") +
-      theme(legend.text = element_text(size = 12, face = "bold"), axis.text.y = element_text(size = 12), legend.title = element_blank()) + 
+    regret.plot.object <- ggplot(graphData,
+                                 aes(x = periodSeq,
+                                     y = relativeRegret)) +
+      geom_line() + ggtitle("Regret Plot") +
+      theme(legend.text = element_text(size = 12, face = "bold"),
+            axis.text.y = element_text(size = 12),
+            legend.title = element_blank()) +
       labs(y = "Relative Regret", x = "period")
   }
-
+  
   if (weight.plot == TRUE & regret.plot == TRUE){
-    return(list(weight = allWeight, regret = relativeRegret, weight.plot.object = weight.plot.object, regret.plot.object = regret.plot.object))
+    return(list(weight = allWeight,
+                regret = relativeRegret,
+                weight.plot.object = weight.plot.object,
+                regret.plot.object = regret.plot.object))
   }
   if (weight.plot == FALSE & regret.plot == TRUE){
-    return(list(weight = allWeight, regret = relativeRegret, regret.plot.object = regret.plot.object))
+    return(list(weight = allWeight,
+                regret = relativeRegret,
+                regret.plot.object = regret.plot.object))
   }
   if (weight.plot == TRUE & regret.plot == FALSE){
-    return(list(weight = allWeight, regret = relativeRegret, weight.plot.object = weight.plot.object))
+    return(list(weight = allWeight,
+                regret = relativeRegret,
+                weight.plot.object = weight.plot.object))
   }
   if (weight.plot == FALSE & regret.plot == FALSE){
     return(list(weight = allWeight, regret = relativeRegret))
