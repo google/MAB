@@ -57,11 +57,15 @@ This function is aimed to compute the probability of pulling each arm for variou
 \examples{
 ### Calculate weights using Thompson Sampling if reward follows Poisson distribution
 set.seed(100)
-CalculateWeight(method = "Thompson-Sampling", method.par = list(ndraws.TS = 1000), 
-   all.event = data.frame(reward = 1:3, trial = rep(10, 3)), reward.family = "Poisson")
+CalculateWeight(method = "Thompson-Sampling",
+                method.par = list(ndraws.TS = 1000),
+                all.event = data.frame(reward = 1:3, trial = rep(10, 3)),
+                reward.family = "Poisson")
 ### Calculate weights using EXP3
-CalculateWeight(method = "EXP3", method.par = list(EXP3 = list(gamma = 0.01, eta =0.1)), 
-   all.event = data.frame(reward = 1:3, trial = rep(10, 3)), reward.family = "Bernoulli", 
-   EXP3Info = list(prevWeight = rep(1, 3), EXP3Trial = rep(5, 3), EXP3Reward = 0:2))
+CalculateWeight(method = "EXP3",
+                method.par = list(EXP3 = list(gamma = 0.01, eta =0.1)),
+                all.event = data.frame(reward = 1:3, trial = rep(10, 3)),
+                reward.family = "Bernoulli",
+                EXP3Info = list(prevWeight = rep(1, 3), EXP3Trial = rep(5, 3), EXP3Reward = 0:2))
 }
 

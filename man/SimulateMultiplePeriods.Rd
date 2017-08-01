@@ -95,17 +95,41 @@ computed by dividing the regret of a certain method over the regret of the bench
 \examples{
 ### Simulate Thompson-Sampling
 set.seed(100)
-res <- SimulateMultiplePeriods(method = "Thompson-Sampling", method.par = list(ndraws.TS = 1000), nburnin = 30, nperiod = 180, npulls.per.period = 5, reward.family = "Bernoulli",  mean.reward = runif(3, 0, 0.1), weight.plot = TRUE)
+res <- SimulateMultiplePeriods(method = "Thompson-Sampling",
+                               method.par = list(ndraws.TS = 1000),
+                               nburnin = 30,
+                               nperiod = 180,
+                               npulls.per.period = 5,
+                               reward.family = "Bernoulli",
+                               mean.reward = runif(3, 0, 0.1),
+                               weight.plot = TRUE)
 res$weight.plot.object
 ### Simulate EXP3-Thompson-Sampling
 set.seed(100)
-res <- SimulateMultiplePeriods(method = "EXP3-Thompson-Sampling", method.par = list(ndraws.TS = 1000, EXP3 = list(gamma = 0, eta = 0.1)), nburnin = 30, nperiod = 180, npulls.per.period = 5, 
-              reward.family = "Bernoulli",  mean.reward = runif(3, 0, 0.1), weight.plot = TRUE)
+res <- SimulateMultiplePeriods(method = "EXP3-Thompson-Sampling",
+                               method.par = list(ndraws.TS = 1000,
+                                                 EXP3 = list(gamma = 0, eta = 0.1)),
+                               nburnin = 30,
+                               nperiod = 180,
+                               npulls.per.period = 5,
+                               reward.family = "Bernoulli",
+                               mean.reward = runif(3, 0, 0.1),
+                               weight.plot = TRUE)
 res$weight.plot.object
 ### Simulate ensemble method HyperTS given "Thompson-Sampling", "Epsilon-Greedy" and "Epsilon-Decreasing"
 set.seed(100)
-res <- SimulateMultiplePeriods(method = "HyperTS", method.par = list(ndraws.TS = 1000, epsilon = 0.1, HyperTS = list(method.list = c("Thompson-Sampling", "Epsilon-Greedy", "Epsilon-Decreasing"))),
-                               nburnin = 30, nperiod = 180, npulls.per.period = 5, reward.family = "Poisson",  mean.reward = runif(3, 0, 0.1), weight.plot = TRUE)
+res <- SimulateMultiplePeriods(method = "HyperTS",
+                               method.par = list(ndraws.TS = 1000,
+                                                 epsilon = 0.1,
+                                                 HyperTS = list(method.list = c("Thompson-Sampling",
+                                                                                "Epsilon-Greedy",
+                                                                                "Epsilon-Decreasing"))),
+                               nburnin = 30,
+                               nperiod = 180,
+                               npulls.per.period = 5,
+                               reward.family = "Poisson",
+                               mean.reward = runif(3, 0, 0.1),
+                               weight.plot = TRUE)
 res$weight.plot.object
 }
 

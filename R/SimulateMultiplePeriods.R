@@ -319,7 +319,8 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
       total.trial[method.index] <- total.trial[method.index] + sum(dailyTrial)
     }
   }
-  relativeRegret <- dailyRegret / equalDailyRegret
+  relativeRegret <- ifelse(equalDailyRegret != 0, 
+                           dailyRegret / equalDailyRegret, 0)
   
   if (weight.plot == TRUE){
     weightVector <- c(t(allWeight))

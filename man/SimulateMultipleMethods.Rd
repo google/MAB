@@ -91,17 +91,40 @@ See \code{\link{SimulateMultiplePeriods}} for more details.
 \examples{
 ### Compare Epsilon-Greedy and Thompson Sampling in the stationary case.
 set.seed(100)
-res <- SimulateMultipleMethods(method = c("Epsilon-Greedy", "Thompson-Sampling"), method.par = list(epsilon = 0.1, ndraws.TS = 1000), iter = 100, nburnin = 30, nperiod = 180, 
-                     reward.mean.family = "Uniform", reward.family = "Bernoulli", narms.family = "Poisson", npulls.family = "Log-Normal", 
-                     data.par = list(reward.mean = list(min = 0, max = 0.1), npulls.family = list(meanlog = 3, sdlog = 1.5), narms.family = list(lambda = 5)), regret.plot = TRUE)
+res <- SimulateMultipleMethods(method = c("Epsilon-Greedy", "Thompson-Sampling"),
+                               method.par = list(epsilon = 0.1, ndraws.TS = 1000),
+                               iter = 100,
+                               nburnin = 30,
+                               nperiod = 180,
+                               reward.mean.family = "Uniform",
+                               reward.family = "Bernoulli",
+                               narms.family = "Poisson",
+                               npulls.family = "Log-Normal",
+                               data.par = list(reward.mean = list(min = 0, max = 0.1),
+                                               npulls.family = list(meanlog = 3, sdlog = 1.5),
+                                               narms.family = list(lambda = 5)),
+                               regret.plot = TRUE)
 res$regret.plot.object
 ### Compare Epsilon-Greedy, Thompson Sampling and EXP3 in the non-stationary case.
 set.seed(100)
-res <- SimulateMultipleMethods(method = c("Epsilon-Greedy", "Thompson-Sampling", "EXP3"), method.par = list(epsilon = 0.1, ndraws.TS = 1000, EXP3 = list(gamma = 0, eta = 0.1)), 
-                     iter = 100, nburnin = 30, nperiod = 90, reward.mean.family = "Beta", reward.family = "Bernoulli", narms.family = "Binomial", 
-                     npulls.family = "Log-Normal", stationary = FALSE, nonstationary.type = "Geometric Random Walk",
-                     data.par = list(reward.mean = list(shape1 = 2, shape2 = 5), npulls.family = list(meanlog = 3, sdlog = 1), narms.family = list(size = 10, prob = 0.5), nonstationary.family = list(sdlog = 0.05)),
-                     regret.plot = TRUE)
+res <- SimulateMultipleMethods(method = c("Epsilon-Greedy", "Thompson-Sampling", "EXP3"),
+                               method.par = list(epsilon = 0.1,
+                                                 ndraws.TS = 1000,
+                                                 EXP3 = list(gamma = 0, eta = 0.1)),
+                               iter = 100,
+                               nburnin = 30,
+                               nperiod = 90,
+                               reward.mean.family = "Beta",
+                               reward.family = "Bernoulli",
+                               narms.family = "Binomial", 
+                               npulls.family = "Log-Normal",
+                               stationary = FALSE,
+                               nonstationary.type = "Geometric Random Walk",
+                               data.par = list(reward.mean = list(shape1 = 2, shape2 = 5),
+                                               npulls.family = list(meanlog = 3, sdlog = 1),
+                                               narms.family = list(size = 10, prob = 0.5),
+                                               nonstationary.family = list(sdlog = 0.05)),
+                               regret.plot = TRUE)
 res$regret.plot.object
 }
 
