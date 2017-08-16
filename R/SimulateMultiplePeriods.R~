@@ -76,16 +76,14 @@
 #' @param method.par A list of parameters needed for different methods:
 #'
 #' \code{epsilon}: A real number between 0 and 1; needed for "Epsilon-Greedy",
-#' "Epsilon-Decreasing", "Greedy-Thompson-Sampling" and
-#' "Greedy-Bayes-Poisson-TS".
+#' "Epsilon-Decreasing", "Greedy-Thompson-Sampling" and "Greedy-Bayes-Poisson-TS".
 #'
 #' \code{ndraws.TS}: A positive integer specifying the number of random draws
 #' from the posterior;
 #' needed for "Thompson-Sampling", "Greedy-Thompson-Sampling" and
 #' "EXP3-Thompson-Sampling".  Default is 1000.
 #'
-#' \code{EXP3}: A list consisting of two real numbers \code{eta} and
-#' \code{gamma};
+#' \code{EXP3}: A list consisting of two real numbers \code{eta} and \code{gamma};
 #' \eqn{eta > 0} and \eqn{0 <= gamma < 1}; needed for "EXP3",
 #' "EXP3-Thompson-Sampling" and "EXP3-Bayes-Poisson-TS".
 #'
@@ -109,9 +107,9 @@
 #' allocate each arm equal traffic before applying any strategy.
 #' @param nperiod A positive integer specifying the number of periods
 #' to apply the strategy.
-#' @param npulls.per.period  A positive integer  or a vector of positive
-#' integers. Default value is 1. If \code{npulls.per.period} is a positive
-#' integer, the number of pulls is \code{npulls.per.period} for each period.
+#' @param npulls.per.period  A positive integer  or a vector of positive integers.
+#' Default value is 1. If \code{npulls.per.period} is a positive integer,
+#' the number of pulls is \code{npulls.per.period} for each period.
 #' If \code{npulls.per.period} is a vector, each element represents
 #' the number of pulls for one period; the length of \code{npulls.per.period}
 #' should be equal to \code{nburnin} + \code{nperiod}.
@@ -160,34 +158,34 @@
 #' res$weight.plot.object
 #' ### Simulate EXP3-Thompson-Sampling
 #' set.seed(100)
-#' res <- SimulateMultiplePeriods(
-#'            method = "EXP3-Thompson-Sampling",
-#'            method.par = list(ndraws.TS = 1000,
-#'                              EXP3 = list(gamma = 0, eta = 0.1)),
-#'            nburnin = 30,
-#'            nperiod = 180,
-#'            npulls.per.period = 5,
-#'            reward.family = "Bernoulli",
-#'            mean.reward = runif(3, 0, 0.1),
-#'            weight.plot = TRUE)
+#' res <- SimulateMultiplePeriods(method = "EXP3-Thompson-Sampling",
+#'                                method.par = list(ndraws.TS = 1000,
+#'                                                  EXP3 = list(gamma = 0, eta = 0.1)),
+#'                                nburnin = 30,
+#'                                nperiod = 180,
+#'                                npulls.per.period = 5,
+#'                                reward.family = "Bernoulli",
+#'                                mean.reward = runif(3, 0, 0.1),
+#'                                weight.plot = TRUE)
 #' res$weight.plot.object
 #' ### Simulate ensemble method HyperTS given "Thompson-Sampling", "Epsilon-Greedy" and "Epsilon-Decreasing"
 #' set.seed(100)
-#' res <- SimulateMultiplePeriods(
-#'            method = "HyperTS",
-#'            method.par = list(
-#'                ndraws.TS = 1000,
-#'                epsilon = 0.1,
-#'                HyperTS = list(method.list = c("Thompson-Sampling",
-#'                                               "Epsilon-Greedy",
-#'                                               "Epsilon-Decreasing"))),
-#'                nburnin = 30,
-#'                nperiod = 180,
-#'                npulls.per.period = 5,
-#'                reward.family = "Poisson",
-#'                mean.reward = runif(3, 0, 0.1),
-#'                weight.plot = TRUE)
+#' res <- SimulateMultiplePeriods(method = "HyperTS",
+#'                                method.par = list(ndraws.TS = 1000,
+#'                                                  epsilon = 0.1,
+#'                                                  HyperTS = list(method.list = c("Thompson-Sampling",
+#'                                                                                 "Epsilon-Greedy",
+#'                                                                                 "Epsilon-Decreasing"))),
+#'                                nburnin = 30,
+#'                                nperiod = 180,
+#'                                npulls.per.period = 5,
+#'                                reward.family = "Poisson",
+#'                                mean.reward = runif(3, 0, 0.1),
+#'                                weight.plot = TRUE)
 #' res$weight.plot.object
+
+
+
 
 SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
                                     method.par = list(ndraws.TS = 1000),
@@ -206,18 +204,19 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
                       "HyperTS")){
     stop("Please specify correct method names!")
   }
-
+  
   if (is.vector(mean.reward)){
     rewardVec <- mean.reward
   }
-
+  
+  
   if (length(npulls.per.period) == 1){
     npullsVec <- npulls.per.period
   }else if(length(npulls.per.period) != nburnin + nperiod |
            min(npulls.per.period) <= 0){
     stop("Please specify correct number of pulls per period!")
   }
-
+  
   if (is.vector(mean.reward)){
     bestReward <- max(rewardVec)
     n <- length(rewardVec)
@@ -225,22 +224,22 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
     bestReward <- apply(mean.reward, 1, max)
     n <- dim(mean.reward)[2]
   }
-
+  
+  
   if (reward.family == "Gaussian" &
       (length(sd.reward) != n | anyNA(sd.reward))){
     stop("Please specify correct standard deviation for Gaussian reward family!")
   }
-
+  
   if (is.vector(mean.reward)){
     if (length(npulls.per.period) == 1){
       burninTrial <- rmultinom(1, nburnin * npullsVec, rep(1 / n, n))
     }else{
-      burninTrial <- rmultinom(1, sum(npulls.per.period[1:nburnin]),
-                               rep(1 / n, n))
+      burninTrial <- rmultinom(1, sum(npulls.per.period[1:nburnin]), rep(1 / n, n))
     }
     burninReward <- apply(cbind(burninTrial, rewardVec, sd.reward), 1,
                           GetReward, reward.family)
-  } else {
+  }else{
     burninTrial <- rep(0, n)
     burninReward <- rep(0, n)
     if (length(npulls.per.period) == 1){
@@ -251,7 +250,7 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
         burninTrial <- burninTrial + tempTrial
         burninReward <- burninReward + tempReward
       }
-    } else {
+    }else{
       for (period in 1:nburnin){
         tempTrial <- rmultinom(1, npulls.per.period[period], rep(1 / n, n))
         tempReward <- apply(cbind(tempTrial, mean.reward[period, ], sd.reward),
@@ -262,7 +261,8 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
     }
   }
   burninEvent <- data.frame(trial = burninTrial, reward = burninReward)
-
+  
+  
   equalDailyRegret <- rep(0, nperiod)
   for (period in 1:nperiod){
     if (length(npulls.per.period) == 1){
@@ -274,14 +274,15 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
       equalDailyRegret[period] <- sum(dailyTrial * (bestReward - rewardVec))
     }else{
       equalDailyRegret[period] <-
-          sum(dailyTrial * (bestReward[nburnin + period] -
-                            mean.reward[nburnin + period, ]))
+        sum(dailyTrial * (bestReward[nburnin + period] - mean.reward[nburnin + period, ]))
     }
   }
-
+  
+  
   allWeight <- cbind()
   all.event <- burninEvent
   dailyRegret <- rep(0, nperiod)
+  
   weight <- as.vector(CalculateWeight(method = "Thompson-Sampling",
                                       sd.reward = sd.reward,
                                       reward.family = reward.family,
@@ -290,7 +291,7 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
   EXP3Info <- list(prevWeight = weight,
                    EXP3Trial = burninTrial,
                    EXP3Reward = burninReward)
-
+  
   if (method == "HyperTS"){
     nmethod <- length(method.par$HyperTS$method.list)
     total.reward <- rep(0, nmethod)
@@ -301,20 +302,22 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
       total.trial <- rep(1, nmethod)
     }
   }
-
+  
+  
+  
+  
   for (period in 1:nperiod){
     if (method == "HyperTS"){
       ndraws <- 1000
       ans <- matrix(nrow = ndraws, ncol = nmethod)
       if (reward.family == "Bernoulli"){
-        for (i in 1:nmethod) ans[ ,i] <-
-            rbeta(ndraws, total.reward[i] + 1,
-                  total.trial[i] - total.reward[i] + 1)
+        for (i in 1:nmethod) ans[ ,i] <- rbeta(ndraws, total.reward[i] + 1,
+                                               total.trial[i] - total.reward[i] + 1)
       }
       if (reward.family == "Gaussian"){
-        for (i in 1:nmethod) ans[ ,i] <-
-            rnorm(ndraws, mean = total.reward[i] / total.trial[i],
-                  sd = sd.reward[i] / sqrt(total.trial[i]))
+        for (i in 1:nmethod) ans[ ,i] <- rnorm(ndraws,
+                                               mean = total.reward[i] / total.trial[i],
+                                               sd = sd.reward[i] / sqrt(total.trial[i]))
       }
       if (reward.family == "Poisson"){
         for (i in 1:nmethod) ans[ ,i] <-
@@ -332,7 +335,7 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
                                 period = period,
                                 EXP3Info = EXP3Info)
     }
-
+    
     if (method != "HyperTS"){
       weight <- CalculateWeight(method,
                                 all.event = all.event,
@@ -342,21 +345,22 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
                                 period = period,
                                 EXP3Info = EXP3Info)
     }
-
+    
     allWeight <- cbind(allWeight, weight)
     if (length(npulls.per.period) == 1){
       dailyTrial <- rmultinom(1, npullsVec, weight)
-    } else {
+    }else{
       dailyTrial <- rmultinom(1, npulls.per.period[nburnin + period], weight)
     }
     if (is.vector(mean.reward)){
       dailyReward <- apply(cbind(dailyTrial, rewardVec, sd.reward),
                            1, GetReward, reward.family)
-    } else {
+    }else{
       dailyReward <-
         apply(cbind(dailyTrial, mean.reward[nburnin + period, ], sd.reward),
               1, GetReward, reward.family)
     }
+    
     all.event$trial <- all.event$trial + dailyTrial
     all.event$reward <- all.event$reward + dailyReward
     if (is.vector(mean.reward)){
@@ -369,15 +373,15 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
     EXP3Info = list(prevWeight = weight,
                     EXP3Trial = dailyTrial,
                     EXP3Reward = dailyReward)
+    
     if (method == "HyperTS"){
-      total.reward[method.index] <-
-          total.reward[method.index] + sum(dailyReward)
+      total.reward[method.index] <- total.reward[method.index] + sum(dailyReward)
       total.trial[method.index] <- total.trial[method.index] + sum(dailyTrial)
     }
   }
   relativeRegret <- ifelse(equalDailyRegret != 0,
                            dailyRegret / equalDailyRegret, 0)
-
+  
   if (weight.plot == TRUE){
     weightVector <- c(t(allWeight))
     if (is.vector(mean.reward)){
@@ -386,6 +390,7 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
     }else{
       names <- rep(sapply(1:n, function(x) paste("Arm", x)), each = nperiod)
     }
+    
     periodSeq <- rep(1:nperiod, n)
     graphData <- data.frame(names, periodSeq, weightVector)
     weight.plot.object <- ggplot(graphData,
@@ -410,6 +415,7 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
             legend.title = element_blank()) +
       labs(y = "Relative Regret", x = "period")
   }
+  
   if (weight.plot == TRUE & regret.plot == TRUE){
     return(list(weight = allWeight,
                 regret = relativeRegret,
@@ -431,6 +437,9 @@ SimulateMultiplePeriods <- function(method = "Thompson-Sampling",
   }
 }
 
+
+
+
 GetReward <- function(x, reward.family, sd.reward){
   if (reward.family == "Bernoulli") {
     return(rbinom(n = 1, size = x[1], prob = x[2]))
@@ -442,3 +451,8 @@ GetReward <- function(x, reward.family, sd.reward){
     return(rpois(n = 1, lambda = x[1] * x[2]))
   }
 }
+
+
+
+
+

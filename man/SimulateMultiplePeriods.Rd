@@ -4,17 +4,18 @@
 \alias{SimulateMultiplePeriods}
 \title{Simulate strategies for Multi-Armed Bandit in multiple periods}
 \usage{
-SimulateMultiplePeriods(method = "Thompson-Sampling",
-  method.par = list(ndraws.TS = 1000), nburnin, nperiod, reward.family,
-  mean.reward, sd.reward = NULL, npulls.per.period = 1,
-  weight.plot = FALSE, regret.plot = FALSE)
+SimulateMultiplePeriods(
+    method = "Thompson-Sampling",
+    method.par = list(ndraws.TS = 1000), nburnin, nperiod, reward.family,
+    mean.reward, sd.reward = NULL, npulls.per.period = 1,
+    weight.plot = FALSE, regret.plot = FALSE)
 }
 \arguments{
 \item{method}{A character string choosing from "Epsilon-Greedy", "Epsilon-Decreasing", "Thompson-Sampling",
 "EXP3", "UCB", "Bayes-Poisson-TS", "Greedy-Thompson-Sampling", "EXP3-Thompson-Sampling", 
 "Greedy-Bayes-Poisson-TS", "EXP3-Bayes-Poisson-TS" and "HyperTS". For details of these methods, see below. Default is "Thompson-Sampling".}
 
-\item{method.par}{A list of parameters needed for different methods: 
+\item{method.par}{A list of parameters needed for different methods:
 
 \code{epsilon}: A real number between 0 and 1; needed for "Epsilon-Greedy", "Epsilon-Decreasing", "Greedy-Thompson-Sampling" and "Greedy-Bayes-Poisson-TS".
 
@@ -26,7 +27,7 @@ needed for "Thompson-Sampling", "Greedy-Thompson-Sampling" and "EXP3-Thompson-Sa
 \code{BP}: A list consisting of three postive integers \code{iter.BP}, \code{ndraws.BP} and \code{interval.BP}; 
 needed for "Bayes-Poisson-TS", "Greedy-Bayes-Poisson-TS" and "EXP3-Bayes-Poisson-TS"; \code{iter.BP} specifies the number of iterations to compute posterior; 
 \code{ndraws.BP} specifies the number of posterior samples drawn from posterior distribution; \code{interval.BP} is specified to draw each posterior sample from
- a sample sequence of length \code{interval.BP}. 
+ a sample sequence of length \code{interval.BP}.
 
 \code{HyperTS}: A list consisting of a vector \code{method.list}, needed for "HyperTS". \code{method.list} is a vector of character strings choosing from "Epsilon-Greedy", "Epsilon-Decreasing", "Thompson-Sampling",
 "EXP3", "UCB", "Bayes-Poisson-TS", "Greedy-Thompson-Sampling", "EXP3-Thompson-Sampling",

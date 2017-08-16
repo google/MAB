@@ -19,8 +19,7 @@
 #' Users can specify the distribution of the number of arms,
 #' the distribution of mean reward, the distribution of the number of pulls
 #' in one period and the stationariness to simulate different scenarios.
-#'  Relative regret is returned and average relative regret plot is returned
-#' if needed.
+#'  Relative regret is returned and average relative regret plot is returned if needed.
 #' See \code{\link{SimulateMultiplePeriods}} for more details.
 #' @param method A vector of character strings choosing from "Epsilon-Greedy",
 #' "Epsilon-Decreasing", "Thompson-Sampling",
@@ -32,24 +31,22 @@
 #' @param method.par A list of parameters needed for different methods:
 #'
 #' \code{epsilon}: A real number between 0 and 1; needed for "Epsilon-Greedy",
-#' "Epsilon-Decreasing", "Greedy-Thompson-Sampling" and
-#' "Greedy-Bayes-Poisson-TS".
-#'
+#' "Epsilon-Decreasing", "Greedy-Thompson-Sampling" and "Greedy-Bayes-Poisson-TS".
+#' 
 #' \code{ndraws.TS}: A positive integer specifying
 #' the number of random draws from the posterior;
 #' needed for "Thompson-Sampling", "Greedy-Thompson-Sampling"
 #' and "EXP3-Thompson-Sampling". Default is 1000.
-#'
-#' \code{EXP3}: A list consisting of two real numbers \code{eta} and
-#' \code{gamma};
+#' 
+#' \code{EXP3}: A list consisting of two real numbers \code{eta} and \code{gamma};
 #' \eqn{eta > 0} and \eqn{0 <= gamma < 1}; needed for "EXP3",
 #' "EXP3-Thompson-Sampling" and "EXP3-Bayes-Poisson-TS".
-#'
+#' 
 #' \code{BP}: A list consisting of three postive integers \code{iter.BP},
 #' \code{ndraws.BP} and \code{interval.BP};
 #' needed for "Bayes-Poisson-TS", "Greedy-Bayes-Poisson-TS"
-#' and "EXP3-Bayes-Poisson-TS"; \code{iter.BP} specifies the number
-#' of iterations to compute posterior;
+#' and "EXP3-Bayes-Poisson-TS"; \code{iter.BP} specifies the number of iterations
+#' to compute posterior;
 #' \code{ndraws.BP} specifies the number of posterior samples drawn
 #' from posterior distribution; \code{interval.BP} is specified to
 #' draw each posterior sample from
@@ -79,8 +76,7 @@
 #'  a vector of standard deviation should be provided in
 #' \code{sd.reward} in \code{data.par}.
 #' @param narms.family A character string specifying the distribution family
-#' of the number of arms. Available distribution includes "Poisson" and
-#' "Binomial".
+#' of the number of arms. Available distribution includes "Poisson" and "Binomial".
 #' @param npulls.family A character string specifying the distribution family
 #' of the number of pulls per period.
 #' For continuous distribution, the number of pulls will be rounded up.
@@ -97,8 +93,7 @@
 #' \code{reward.mean}: A list of parameters of \code{reward.mean.family}:
 #' \code{min} and \code{max} are two real numbers specifying
 #' the bounds when \eqn{reward.mean.family = "Uniform"}; \code{shape1} and
-#' \code{shape2} are two shape parameters when
-#' \eqn{reward.mean.family = "Beta"};
+#' \code{shape2} are two shape parameters when \eqn{reward.mean.family = "Beta"};
 #' \code{mean} and \code{sd} specify mean and standard deviation
 #' when \eqn{reward.mean.family = "Gaussian"}.
 #'
@@ -115,12 +110,11 @@
 #' \code{npulls.family}: A list of parameters of \code{npulls.family}:
 #' \code{meanlog} and \code{sdlog} are 2 positive parameters specifying the mean
 #' and standard deviation in the log scale
-#'  when \eqn{npulls.family = "Log-Normal"};
-#' \code{lambda} is a positive parameter
+#'  when \eqn{npulls.family = "Log-Normal"}; \code{lambda} is a positive parameter
 #' specifying the mean when \eqn{npulls.family = "Poisson"}.
 #'
-#' \code{nonstationary.family}:
-#' A list of parameters of \code{nonstationary.type}:
+#'
+#' \code{nonstationary.family}: A list of parameters of \code{nonstationary.type}:
 #' \code{sd} is a positive parameter specifying the standard deviation
 #' of white noise
 #'  when \eqn{nonstationary.type = "Random Walk"}; \code{sdlog} is
@@ -135,43 +129,43 @@
 #' @examples
 #' ### Compare Epsilon-Greedy and Thompson Sampling in the stationary case.
 #' set.seed(100)
-#' res <- SimulateMultipleMethods(
-#'            method = c("Epsilon-Greedy", "Thompson-Sampling"),
-#'            method.par = list(epsilon = 0.1, ndraws.TS = 1000),
-#'            iter = 100,
-#'            nburnin = 30,
-#'            nperiod = 180,
-#'            reward.mean.family = "Uniform",
-#'            reward.family = "Bernoulli",
-#'            narms.family = "Poisson",
-#'            npulls.family = "Log-Normal",
-#'            data.par = list(reward.mean = list(min = 0, max = 0.1),
-#'                            npulls.family = list(meanlog = 3, sdlog = 1.5),
-#'                            narms.family = list(lambda = 5)),
-#'            regret.plot = TRUE)
+#' res <- SimulateMultipleMethods(method = c("Epsilon-Greedy", "Thompson-Sampling"),
+#'                                method.par = list(epsilon = 0.1, ndraws.TS = 1000),
+#'                                iter = 100,
+#'                                nburnin = 30,
+#'                                nperiod = 180,
+#'                                reward.mean.family = "Uniform",
+#'                                reward.family = "Bernoulli",
+#'                                narms.family = "Poisson",
+#'                                npulls.family = "Log-Normal",
+#'                                data.par = list(reward.mean = list(min = 0, max = 0.1),
+#'                                                npulls.family = list(meanlog = 3, sdlog = 1.5),
+#'                                                narms.family = list(lambda = 5)),
+#'                                regret.plot = TRUE)
 #' res$regret.plot.object
 #' ### Compare Epsilon-Greedy, Thompson Sampling and EXP3 in the non-stationary case.
 #' set.seed(100)
-#' res <- SimulateMultipleMethods(
-#'            method = c("Epsilon-Greedy", "Thompson-Sampling", "EXP3"),
-#'            method.par = list(epsilon = 0.1,
-#'                              ndraws.TS = 1000,
-#'                              EXP3 = list(gamma = 0, eta = 0.1)),
-#'            iter = 100,
-#'            nburnin = 30,
-#'            nperiod = 90,
-#'            reward.mean.family = "Beta",
-#'            reward.family = "Bernoulli",
-#'            narms.family = "Binomial",
-#'            npulls.family = "Log-Normal",
-#'            stationary = FALSE,
-#'            nonstationary.type = "Geometric Random Walk",
-#'            data.par = list(reward.mean = list(shape1 = 2, shape2 = 5),
-#'                            npulls.family = list(meanlog = 3, sdlog = 1),
-#'                            narms.family = list(size = 10, prob = 0.5),
-#'                            nonstationary.family = list(sdlog = 0.05)),
-#'            regret.plot = TRUE)
+#' res <- SimulateMultipleMethods(method = c("Epsilon-Greedy", "Thompson-Sampling", "EXP3"),
+#'                                method.par = list(epsilon = 0.1,
+#'                                                  ndraws.TS = 1000,
+#'                                                  EXP3 = list(gamma = 0, eta = 0.1)),
+#'                                iter = 100,
+#'                                nburnin = 30,
+#'                                nperiod = 90,
+#'                                reward.mean.family = "Beta",
+#'                                reward.family = "Bernoulli",
+#'                                narms.family = "Binomial", 
+#'                                npulls.family = "Log-Normal",
+#'                                stationary = FALSE,
+#'                                nonstationary.type = "Geometric Random Walk",
+#'                                data.par = list(reward.mean = list(shape1 = 2, shape2 = 5),
+#'                                                npulls.family = list(meanlog = 3, sdlog = 1),
+#'                                                narms.family = list(size = 10, prob = 0.5),
+#'                                                nonstationary.family = list(sdlog = 0.05)),
+#'                                regret.plot = TRUE)
 #' res$regret.plot.object
+
+
 
 SimulateMultipleMethods <- function(method = "Thompson-Sampling",
                                     method.par = list(ndraws.TS = 1000),
@@ -205,7 +199,8 @@ SimulateMultipleMethods <- function(method = "Thompson-Sampling",
   if (! npulls.family %in% c("Log-Normal", "Poisson")){
     stop("Please specify correct distribution family for the number of pulls!")
   }
-
+  
+  
   nmethod <- length(method)
   regret.matrix <- array(0, c(nperiod, iter, nmethod))
   for (i in 1:iter){
@@ -228,7 +223,8 @@ SimulateMultipleMethods <- function(method = "Thompson-Sampling",
         }
       }
     }
-
+    
+    
     if (reward.mean.family == "Uniform"){
       mean.reward <- runif(narms, min = data.par$reward.mean$min,
                            max = data.par$reward.mean$max)
@@ -244,7 +240,8 @@ SimulateMultipleMethods <- function(method = "Thompson-Sampling",
       mean.reward <- rnorm(narms, mean = data.par$reward.mean$mean,
                            sd = data.par$reward.mean$sd)
     }
-
+    
+    
     if (stationary == FALSE){
       mean.reward.matrix <- matrix(0, nrow = nburnin + nperiod, ncol = narms)
       mean.reward.matrix[1, ] <- mean.reward
@@ -276,26 +273,25 @@ SimulateMultipleMethods <- function(method = "Thompson-Sampling",
         mean.reward <- mean.reward.matrix
       }
     }
-
+    
+    
     if (npulls.family == "Log-Normal"){
-      npulls.per.period <- ceiling(
-          rlnorm(nburnin + nperiod,
-                 meanlog = data.par$npulls.family$meanlog,
-                 sdlog = data.par$npulls.family$sdlog))
+      npulls.per.period <- ceiling(rlnorm(nburnin + nperiod,
+                                          meanlog = data.par$npulls.family$meanlog,
+                                          sdlog = data.par$npulls.family$sdlog))
     }
     if (npulls.family == "Poisson"){
       npulls.per.period <- rep(0, nburnin + nperiod)
       for (num in 1:(nburnin + nperiod)){
         while(TRUE){
-          npulls.per.period[num] <-
-              rpois(1, lambda = data.par$npulls.family$lambda)
+          npulls.per.period[num] <- rpois(1, lambda = data.par$npulls.family$lambda)
           if (npulls.per.period[num] > 0){
             break
           }
         }
       }
     }
-
+    
     for (k in 1:length(method)){
       regret <- SimulateMultiplePeriods(method = method[k],
                                         nburnin = nburnin,
@@ -308,7 +304,7 @@ SimulateMultipleMethods <- function(method = "Thompson-Sampling",
       regret.matrix[, i, k] <- regret
     }
   }
-
+  
   if (regret.plot == TRUE){
     relativeRegret <- c(apply(regret.matrix, c(1,3), mean))
     methodName <- rep(method, each = nperiod)
@@ -325,7 +321,9 @@ SimulateMultipleMethods <- function(method = "Thompson-Sampling",
       labs(y = "Relative Regret", x = "day")
     return(list(regret.matrix = regret.matrix,
                 regret.plot.object = regret.plot.object))
-  } else {
+  }else{
     return(list(regret.matrix = regret.matrix))
   }
 }
+
+
