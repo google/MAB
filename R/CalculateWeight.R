@@ -11,40 +11,66 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#' Calculate the probability of pulling each arm in the next period for various strategies
+#' Calculate the probability of pulling each arm in the next period for various
+#' strategies
 #'
-#' This function is aimed to compute the probability of pulling each arm for various methods in Multi-Armed Bandit given the total reward and the number of trials for each arm.
+#' This function is aimed to compute the probability of pulling each arm for
+#' various methods in Multi-Armed Bandit given the total reward and the number
+#' of trials for each arm.
 #'
-#' @param method A character string choosing from "Epsilon-Greedy", "Epsilon-Decreasing", "Thompson-Sampling",
-#' "EXP3", "UCB", "Bayes-Poisson-TS", "Greedy-Thompson-Sampling", "EXP3-Thompson-Sampling",
-#' "Greedy-Bayes-Poisson-TS" and "EXP3-Bayes-Poisson-TS". See \code{\link{SimulateMultiplePeriods}} for more details. Default is "Thompson-Sampling".
+#' @param method A character string choosing from "Epsilon-Greedy",
+#' "Epsilon-Decreasing", "Thompson-Sampling",
+#' "EXP3", "UCB", "Bayes-Poisson-TS", "Greedy-Thompson-Sampling",
+#' "EXP3-Thompson-Sampling",
+#' "Greedy-Bayes-Poisson-TS" and "EXP3-Bayes-Poisson-TS".
+#' See \code{\link{SimulateMultiplePeriods}} for more details.
+#' Default is "Thompson-Sampling".
 #' @param method.par A list of parameters needed for different methods:
 #'
-#' \code{epsilon}: A real number between 0 and 1; needed for "Epsilon-Greedy", "Epsilon-Decreasing", "Greedy-Thompson-Sampling" and "Greedy-Bayes-Poisson-TS".
+#' \code{epsilon}: A real number between 0 and 1; needed for "Epsilon-Greedy",
+#' "Epsilon-Decreasing", "Greedy-Thompson-Sampling" and "Greedy-Bayes-Poisson-TS".
 #'
-#' \code{ndraws.TS}: A positive integer specifying the number of random draws from the posterior;
-#' needed for "Thompson-Sampling", "Greedy-Thompson-Sampling" and "EXP3-Thompson-Sampling".  Default is 1000.
+#' \code{ndraws.TS}: A positive integer specifying the number of random draws
+#' from the posterior;
+#' needed for "Thompson-Sampling", "Greedy-Thompson-Sampling" and
+#' "EXP3-Thompson-Sampling".  Default is 1000.
 #'
-#' \code{EXP3}: A list consisting of two real numbers \code{eta} and \code{gamma}; \eqn{eta > 0} and \eqn{0 <= gamma < 1}; needed for "EXP3", "EXP3-Thompson-Sampling" and "EXP3-Bayes-Poisson-TS".
+#' \code{EXP3}: A list consisting of two real numbers \code{eta} and \code{gamma};
+#' \eqn{eta > 0} and \eqn{0 <= gamma < 1}; needed for "EXP3",
+#' "EXP3-Thompson-Sampling" and "EXP3-Bayes-Poisson-TS".
 #'
-#' \code{BP}: A list consisting of three postive integers \code{iter.BP}, \code{ndraws.BP} and \code{interval.BP};
-#' needed for "Bayes-Poisson-TS", "Greedy-Bayes-Poisson-TS" and "EXP3-Bayes-Poisson-TS"; \code{iter.BP} specifies the number of iterations to compute posterior;
-#' \code{ndraws.BP} specifies the number of posterior samples drawn from posterior distribution; \code{interval.BP} is specified to draw each posterior sample from
+#' \code{BP}: A list consisting of three postive integers \code{iter.BP},
+#' \code{ndraws.BP} and \code{interval.BP};
+#' needed for "Bayes-Poisson-TS", "Greedy-Bayes-Poisson-TS" and
+#' "EXP3-Bayes-Poisson-TS"; \code{iter.BP} specifies the number of iterations
+#' to compute posterior;
+#' \code{ndraws.BP} specifies the number of posterior samples drawn from
+#' posterior distribution; \code{interval.BP} is specified to draw each
+#' posterior sample from
 #'  a sample sequence of length \code{interval.BP}.
-#' @param all.event A data frame containing two columns \code{trial} and \code{reward} with the number of rows equal to the number of arms.
-#' Each element of \code{trial} and \code{reward} represents the number of trials and the total reward for each arm respectively.
-#' @param reward.family A character string specifying the distribution family of reward. Available distribution includes
-#'  "Bernoulli", "Poisson" and "Gaussian". If "Gaussian" is chosen to be the reward distribution,
+#' @param all.event A data frame containing two columns \code{trial} and
+#' \code{reward} with the number of rows equal to the number of arms.
+#' Each element of \code{trial} and \code{reward} represents the number of trials
+#' and the total reward for each arm respectively.
+#' @param reward.family A character string specifying the distribution family
+#' of reward. Available distribution includes
+#'  "Bernoulli", "Poisson" and "Gaussian". If "Gaussian" is chosen to be the
+#' reward distribution,
 #' a vector of standard deviation should be provided in \code{sd.reward}.
-#' @param sd.reward A vector of non-negative numbers specifying standard deviation of each arm's reward distribution if "Gaussian" is chosen to be the reward distribution. Default to be NULL.
+#' @param sd.reward A vector of non-negative numbers specifying standard
+#' deviation of each arm's reward distribution if "Gaussian" is chosen to be
+#' the reward distribution. Default to be NULL.
 #' See \code{reward.family}.
 #' @param period A positive integer specifying the period index. Default to be 1.
-#' @param EXP3Info A list of three vectors \code{prevWeight}, \code{EXP3Trial} and \code{EXP3Reward} with dimension equal to the number of arms,
+#' @param EXP3Info A list of three vectors \code{prevWeight}, \code{EXP3Trial}
+#' and \code{EXP3Reward} with dimension equal to the number of arms,
 #' needed for "EXP3", "EXP3-Thompson-Sampling" and "EXP3-Bayes-Poisson-TS":
 #'
 #' \code{prevWeight}: the weight vector in the previous EXP3 iteration.
 #'
-#' \code{EXP3Trial} and \code{EXP3Reward}:  vectors representing the number of trials and the total reward for each arm in the previous period respectively.
+#' \code{EXP3Trial} and \code{EXP3Reward}:  vectors representing
+#' the number of trials and the total reward for each arm in
+#' the previous period respectively.
 #'
 #' See \code{\link{SimulateMultiplePeriods}} for more details.
 #' @return A normalized weight vector for future randomized allocation.
