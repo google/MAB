@@ -68,7 +68,7 @@
 #'
 #' \code{prevWeight}: the weight vector in the previous EXP3 iteration.
 #'
-#' \code{EXP3Trial} and \code{EXP3Reward}:  vectors representing
+#' \code{EXP3Trial} and \code{EXP3Reward}: vectors representing
 #' the number of trials and the total reward for each arm in
 #' the previous period respectively.
 #'
@@ -309,5 +309,3 @@ CalculateWeight <- function(method = "Thompson-Sampling",
     }
   }
 }
-
-
