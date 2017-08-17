@@ -2,7 +2,7 @@ Package: MAB
 Title: Multi-Armed Bandit Strategies Implementation and Simulation
 Version: 1.0.0
 Authors@R: c(
-    person("Yunbo", "Ouyang", email = "youyang@google.com", role = c("aut")),
+    person("Yunbo", "Ouyang", email = "youyang4@illinois.edu", role = c("aut")),
     person("Shuchao", "Bi", email = "shuchaobi@google.com", role = c("aut", "cre")),
     person("Zoey", "Chu", email = "chuwanghuan@google.com", role = c("aut")),
     person("Chunqiu", "Zeng", email = "chunqiuzeng@google.com", role = c("aut")))
