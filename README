@@ -1,8 +1,0 @@
-This is not an official Google product.
-
-To install MAB package, download the package and run the following code in 
-command line:
-R CMD INSTALL FILE.PATH
-
-
-
