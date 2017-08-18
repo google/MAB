@@ -11,7 +11,7 @@ in different scenarios. This is not an official Google product.
 Install the Package
 -------------------
 
-To install MAB package, download the package and run the following code in 
+MAB depends on R package [emre](https://github.com/google/emre). To install MAB package, download the package and run the following code in 
 command line:
 
 R CMD INSTALL FILE.PATH
